@@ -8,9 +8,6 @@ export function NavSidebar() {
       <NavLink to="/" end className="nav-home">
         Parallelism
       </NavLink>
-      <NavLink to="/about" className={({ isActive }) => (isActive ? 'nav-about active' : 'nav-about')}>
-        About the Authors
-      </NavLink>
       <ol className="nav-chapters">
         {chapters.map((c) => (
           <li key={c.slug}>

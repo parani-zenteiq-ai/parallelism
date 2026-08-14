@@ -1,0 +1,69 @@
+.authors {
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+.authors-kicker {
+  font-family: var(--code-font);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-bottom: 20px;
+}
+
+.authors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.author-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  background: var(--surface);
+}
+
+.author-card-placeholder {
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.author-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.author-role {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.author-bio {
+  margin: 12px 0 0;
+  line-height: 1.6;
+  font-size: 0.94rem;
+  color: var(--text-muted);
+}
+
+.author-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.author-links a {
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.author-links a:hover {
+  text-decoration: underline;
+}

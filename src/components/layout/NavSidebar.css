@@ -18,20 +18,6 @@
   margin-bottom: 20px;
 }
 
-.nav-about {
-  display: block;
-  text-decoration: none;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-bottom: 20px;
-  padding: 4px 0;
-}
-
-.nav-about:hover,
-.nav-about.active {
-  color: var(--accent);
-}
-
 .nav-chapters {
   list-style: none;
   margin: 0;

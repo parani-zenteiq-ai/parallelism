@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { chapters } from './registry'
+import { Authors } from '../components/Authors'
 import './Home.css'
 
 export function Home() {
   return (
     <div className="home">
       <div className="home-hero">
+        <div className="home-kicker">A technical guide</div>
         <h1>How LLMs Get Trained Across Thousands of GPUs</h1>
         <p className="home-lede">
           A single GPU can't hold a modern language model, let alone train one. This is a
@@ -17,6 +19,8 @@ export function Home() {
           Start from the beginning →
         </Link>
       </div>
+
+      <Authors />
 
       <ol className="home-toc">
         {chapters.map((c) => (
