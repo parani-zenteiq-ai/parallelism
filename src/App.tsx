@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { NavSidebar } from './components/layout/NavSidebar'
 import { Home } from './chapters/Home'
+import { Playground } from './pages/Playground'
 import { WhyParallelism } from './chapters/WhyParallelism'
 import { Collectives } from './chapters/Collectives'
 import { DataParallel } from './chapters/DataParallel'
@@ -18,6 +19,7 @@ function App() {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/playground" element={<Playground />} />
           <Route path="/why-parallelism" element={<WhyParallelism />} />
           <Route path="/collectives" element={<Collectives />} />
           <Route path="/data-parallel" element={<DataParallel />} />

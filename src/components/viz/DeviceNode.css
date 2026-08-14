@@ -1,0 +1,23 @@
+.device-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--code-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.device-node.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}

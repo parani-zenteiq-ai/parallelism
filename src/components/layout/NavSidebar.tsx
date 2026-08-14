@@ -21,6 +21,12 @@ export function NavSidebar() {
           </li>
         ))}
       </ol>
+      <NavLink
+        to="/playground"
+        className={({ isActive }) => (isActive ? 'nav-playground active' : 'nav-playground')}
+      >
+        Component playground
+      </NavLink>
     </nav>
   )
 }

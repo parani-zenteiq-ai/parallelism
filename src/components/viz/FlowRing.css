@@ -1,0 +1,75 @@
+.flow-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.flow-ring-canvas {
+  position: relative;
+}
+
+.flow-ring-track {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px dashed var(--border);
+}
+
+.flow-ring-pulse {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px 1px var(--accent-soft);
+  offset-distance: 0%;
+  animation: flow-ring-move var(--duration, 6s) linear infinite;
+}
+
+.flow-ring-canvas.paused .flow-ring-pulse {
+  animation-play-state: paused;
+}
+
+@keyframes flow-ring-move {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.flow-ring-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flow-ring-controls button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.flow-ring-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.flow-ring-count {
+  font-family: var(--code-font);
+  color: var(--text);
+  min-width: 1.2em;
+}

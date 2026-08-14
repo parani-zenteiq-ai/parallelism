@@ -60,3 +60,18 @@
 .nav-link.active .nav-order {
   color: var(--accent);
 }
+
+.nav-playground {
+  display: block;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  text-decoration: none;
+}
+
+.nav-playground:hover,
+.nav-playground.active {
+  color: var(--accent);
+}
