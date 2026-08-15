@@ -4,13 +4,18 @@ Public, interactive teaching site explaining LLM training parallelism (data, ZeR
 pipeline, sequence/context, MoE/expert parallelism) from fundamentals up. React + Vite + TS,
 deployed eventually to Vercel/Netlify.
 
-**Project framing**: a one-week learning project. Paranidharan (and his co-author) are learning
-this material themselves and uploading it in their own words as they go — this is not a
-ghost-written reference site. **Audience is school-level** — no assumed ML/PhD background, no
-assumed hands-on experience. Content must build up genuinely from scratch, including basic math
-prerequisites before any parallelism concept: what matrix multiplication is, dot products,
-arithmetic — so a reader never feels lost. Keep this bar in mind for any future chapter work:
-prefer adding a prerequisite/math-primer step over assuming a reader already knows it.
+**Project framing**: a month-long learning project (not one week — corrected 2026-08-15).
+Quality is non-negotiable; Paranidharan wants to genuinely impress frontier labs and would
+rather post slowly, chapter by chapter as he actually learns each concept, than rush breadth. As
+of 2026-08-15 the near-term focus is `math-prerequisites` only — resist the urge to move on to
+other chapters just because 9 more exist as placeholders in the registry. Paranidharan (and his
+co-author) are learning this material themselves and uploading it in their own words as they go
+— this is not a ghost-written reference site. **Audience is school-level** — no assumed ML/PhD
+background, no assumed hands-on experience. Content must build up genuinely from scratch,
+including basic math prerequisites before any parallelism concept: what matrix multiplication
+is, dot products, arithmetic — so a reader never feels lost. Keep this bar in mind for any
+future chapter work: prefer adding a prerequisite/math-primer step over assuming a reader
+already knows it.
 
 ## Critical constraint — read this first
 
