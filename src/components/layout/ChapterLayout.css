@@ -1,7 +1,14 @@
+.chapter-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 56px;
+  padding: 48px 32px 96px;
+}
+
 .chapter {
   max-width: 760px;
-  margin: 0 auto;
-  padding: 48px 32px 96px;
+  width: 100%;
 }
 
 .chapter-kicker {
