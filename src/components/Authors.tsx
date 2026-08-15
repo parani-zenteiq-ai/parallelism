@@ -25,9 +25,14 @@ export function Authors() {
           </div>
         </div>
 
-        <div className="author-card author-card-placeholder">
-          <div className="author-name">Co-author</div>
-          <p className="author-bio">Bio coming soon.</p>
+        <div className="author-card">
+          <div className="author-name">Pinakin Choudary</div>
+          <div className="author-role">Distributed Training, ZenteiQ.ai</div>
+          <p className="author-bio">
+            Pinakin studied math and computing (B.Tech) at the Indian Institute of Science (IISc)
+            Bangalore. He now works at ZenteiQ.ai on distributed training clusters and training
+            large models across them.
+          </p>
         </div>
       </div>
     </section>

@@ -1,0 +1,72 @@
+.flashcard {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-family: var(--code-font);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.flashcard-correct,
+.flashcard-revealed {
+  border-color: var(--accent);
+}
+
+.flashcard-incorrect {
+  border-color: #d6564a;
+}
+
+.flashcard-prompt {
+  white-space: nowrap;
+}
+
+.flashcard-answer {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.flashcard-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flashcard-input-row input {
+  width: 56px;
+  font-family: var(--code-font);
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.flashcard-input-row button {
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.flashcard-reveal {
+  background: transparent !important;
+  color: var(--text-faint) !important;
+  text-decoration: underline;
+}
+
+.flashcard-feedback {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.82rem;
+  color: #d6564a;
+}

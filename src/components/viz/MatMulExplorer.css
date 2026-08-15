@@ -1,0 +1,87 @@
+.matmul-explorer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.matmul-grid-outer {
+  display: grid;
+  gap: 12px;
+  width: max-content;
+}
+
+.matmul-corner {
+  width: 100%;
+  height: 100%;
+}
+
+.matmul-sub {
+  display: grid;
+  gap: 4px;
+}
+
+.matmul-cell {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--code-font);
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.matmul-cell.highlight {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.matmul-c-cell {
+  cursor: pointer;
+  font-family: var(--code-font);
+  color: var(--text-faint);
+  transition: border-color 0.15s;
+}
+
+.matmul-c-cell:hover {
+  border-color: var(--accent);
+}
+
+.matmul-c-cell.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.matmul-c-cell.filled {
+  color: var(--text);
+  font-weight: 700;
+  background: var(--bg);
+}
+
+.matmul-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.matmul-detail-label {
+  font-family: var(--code-font);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.matmul-detail-solved {
+  color: var(--accent);
+  font-weight: 600;
+}

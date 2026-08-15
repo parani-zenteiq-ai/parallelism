@@ -1,0 +1,27 @@
+.dp-walkthrough {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dp-sum {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dp-sum-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.dp-result {
+  font-weight: 600;
+  color: var(--accent);
+}
