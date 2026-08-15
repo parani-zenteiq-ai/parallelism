@@ -1,8 +1,8 @@
 import { ChapterLayout } from '../../components/layout/ChapterLayout'
 
-export function PipelineParallel() {
+export function MathPrerequisites() {
   return (
-    <ChapterLayout slug="pipeline-parallel">
+    <ChapterLayout slug="math-prerequisites">
       <p>Content coming soon.</p>
     </ChapterLayout>
   )

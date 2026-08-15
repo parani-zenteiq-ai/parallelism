@@ -4,14 +4,23 @@ Public, interactive teaching site explaining LLM training parallelism (data, ZeR
 pipeline, sequence/context, MoE/expert parallelism) from fundamentals up. React + Vite + TS,
 deployed eventually to Vercel/Netlify.
 
+**Project framing**: a one-week learning project. Paranidharan (and his co-author) are learning
+this material themselves and uploading it in their own words as they go — this is not a
+ghost-written reference site. **Audience is school-level** — no assumed ML/PhD background, no
+assumed hands-on experience. Content must build up genuinely from scratch, including basic math
+prerequisites before any parallelism concept: what matrix multiplication is, dot products,
+arithmetic — so a reader never feels lost. Keep this bar in mind for any future chapter work:
+prefer adding a prerequisite/math-primer step over assuming a reader already knows it.
+
 ## Critical constraint — read this first
 
 **Do not write chapter content (the parallelism explanations) unless explicitly asked.** The
 site owner (Paranidharan) has his own ideas for how each chapter should be taught and wants to
-design the interactive explanations himself. Only build template/scaffolding/tooling — layout,
-nav, routing, viz component primitives, theming — until he asks for actual chapter content.
-All 9 chapter pages currently render only `<p>Content coming soon.</p>` inside the shared
-`ChapterLayout` — that's intentional, not unfinished work to "complete" on your own initiative.
+design/write the interactive explanations himself, in his own understanding, as he learns the
+material. Only build template/scaffolding/tooling — layout, nav, routing, viz component
+primitives, theming — until he asks for actual chapter content. All 9 chapter pages currently
+render only `<p>Content coming soon.</p>` inside the shared `ChapterLayout` — that's
+intentional, not unfinished work to "complete" on your own initiative.
 
 ## Stack & commands
 
@@ -25,30 +34,40 @@ All 9 chapter pages currently render only `<p>Content coming soon.</p>` inside t
 
 ## Structure
 
-- `src/chapters/registry.ts` — single source of truth for the 9 chapters (slug, order, title,
+- `src/chapters/registry.ts` — single source of truth for the 10 chapters (slug, order, title,
   summary) plus `nextChapter`/`prevChapter` helpers. Add a chapter here first, then create its
   route in `src/App.tsx` and folder in `src/chapters/<Name>/index.tsx`.
 - `src/chapters/<ChapterName>/index.tsx` — one folder per chapter, wraps content in
-  `ChapterLayout`. Currently all placeholders.
+  `ChapterLayout`, passing only `slug` (order/title are looked up from the registry — don't
+  hardcode them in the chapter component, that's how they drifted out of sync before). Currently
+  all placeholders.
 - `src/chapters/Home.tsx` — landing page: hero, `<Authors />` section, chapter TOC.
 - `src/components/layout/NavSidebar.tsx` — left sidebar nav, chapter list driven by `registry.ts`.
 - `src/components/layout/ChapterLayout.tsx` — shared chapter shell (kicker, title, prev/next nav).
 - `src/components/Authors.tsx` — author bio cards, rendered on the home page (there is no
   separate `/about` route — it was intentionally folded into Home).
-- `src/components/viz/` — not yet created. Intended home for reusable visualization primitives
-  (e.g. `TensorGrid`, `DeviceBox`, `CommArrow`, `MemoryBar`) once chapter content work begins.
-  Build primitives here and reuse across chapters rather than one-off visuals per chapter.
+- `src/components/viz/` — reusable visualization primitives. `DeviceNode.tsx` (a single device
+  box) and `FlowRing.tsx` (devices arranged in a ring, pulses looping continuously around a
+  circular track via CSS `offset-path`, with play/pause + speed + device-count controls) exist
+  as validated prototypes — this looping/interactive/animated-by-default style is the confirmed
+  visual language for the whole site (see memory: feedback-viz-style). Extend/reuse these rather
+  than inventing a new visual language per chapter.
+- `src/pages/Playground.tsx` (route `/playground`, linked at the bottom of the sidebar) — a
+  standalone page for previewing/iterating on viz primitives outside of any real chapter.
 - `src/index.css` — global theme tokens (CSS custom properties), light/dark via
   `prefers-color-scheme`. Palette is a warm paper/near-black "frontier lab" look — serif
   headlines (`--serif-font`) + sans body + monospace uppercase kickers (`--code-font`).
 
 ## Content outline (for when chapter authoring resumes)
 
-Teaching order, defined in `registry.ts`: Why Parallelism → Hardware & Collectives Primer →
-Data Parallelism → ZeRO/FSDP → Tensor Parallelism → Pipeline Parallelism → Sequence/Context
-Parallelism → Expert Parallelism (MoE) → Putting It Together. Full plan with per-chapter notes
-is in `~/.claude/plans/zazzy-dreaming-ripple.md` (may not exist in a fresh environment — treat
-the outline above and in `registry.ts` as authoritative if that file is gone).
+Teaching order, defined in `registry.ts`: Math Prerequisites → Why Parallelism → Hardware &
+Collectives Primer → Data Parallelism → ZeRO/FSDP → Tensor Parallelism → Pipeline Parallelism →
+Sequence/Context Parallelism → Expert Parallelism (MoE) → Putting It Together. Math
+Prerequisites (arithmetic, dot products, matrix multiplication) was added as chapter 1 because
+the audience is school-level with no assumed math/ML background — every later chapter should
+assume only what's taught there, not outside knowledge. Full plan with per-chapter notes is in
+`~/.claude/plans/zazzy-dreaming-ripple.md` (may not exist in a fresh environment — treat the
+outline above and in `registry.ts` as authoritative if that file is gone).
 
 ## Open items / pending from the owner
 

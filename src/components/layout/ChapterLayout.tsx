@@ -1,23 +1,26 @@
 import { Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
-import { nextChapter, prevChapter } from '../../chapters/registry'
+import { chapters, nextChapter, prevChapter } from '../../chapters/registry'
 import './ChapterLayout.css'
 
 interface ChapterLayoutProps {
   slug: string
-  order: number
-  title: string
   children: ReactNode
 }
 
-export function ChapterLayout({ slug, order, title, children }: ChapterLayoutProps) {
+export function ChapterLayout({ slug, children }: ChapterLayoutProps) {
+  const meta = chapters.find((c) => c.slug === slug)
+  if (!meta) {
+    throw new Error(`Unknown chapter slug: ${slug}`)
+  }
+
   const next = nextChapter(slug)
   const prev = prevChapter(slug)
 
   return (
     <article className="chapter">
-      <div className="chapter-kicker">Chapter {order}</div>
-      <h1>{title}</h1>
+      <div className="chapter-kicker">Chapter {meta.order}</div>
+      <h1>{meta.title}</h1>
       <div className="chapter-body">{children}</div>
       <nav className="chapter-footer-nav">
         {prev ? (
