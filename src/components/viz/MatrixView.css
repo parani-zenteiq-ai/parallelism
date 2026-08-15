@@ -29,3 +29,16 @@
   background: var(--surface);
   color: var(--text);
 }
+
+.matrix-view-cell.match {
+  border-color: #2f9e5f;
+  background: rgba(47, 158, 95, 0.12);
+  color: #2f9e5f;
+  font-weight: 700;
+}
+
+.matrix-view-cell.mismatch {
+  border-color: #d6564a;
+  background: rgba(214, 86, 74, 0.1);
+  color: #d6564a;
+}

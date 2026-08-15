@@ -63,8 +63,10 @@ export function MathPrerequisites() {
       <h2>Splitting the work between two workers</h2>
       <p>
         Now imagine two workers (two GPUs, say) want to compute C = A @ B together, each doing
-        half the work. There are two very different ways to split up B, and they behave
-        completely differently:
+        half the work. The obvious way to split the job is to give each worker half of matrix B
+        — but there are two different ways to cut B in half: <strong>by columns</strong>, or{' '}
+        <strong>by rows</strong>. Here's why that choice actually matters, and why it's worth
+        comparing them side by side instead of assuming they behave the same way.
       </p>
       <p>
         Imagine you and a friend are asked: "how many apples were sold this week across 4 fruit
@@ -76,20 +78,20 @@ export function MathPrerequisites() {
         other and add your numbers together before either number means anything.
       </p>
       <p>
-        Splitting B by <strong>columns</strong> is like splitting by stand: each worker's piece
-        is already complete. Splitting the <strong>shared inner dimension</strong> (rows of B,
-        matched with columns of A) is like splitting by day: each worker only has a partial,
-        incomplete sum — and the two workers have to add their pieces together before anyone has
-        the real answer. Try both below.
+        Splitting B <strong>by columns</strong> is like splitting by stand: each worker's piece
+        turns out to already be complete. Splitting B <strong>by rows</strong> is like splitting
+        by day: each worker ends up with a partial, incomplete result — and the two workers have
+        to add their results together before anyone has the real answer. Try both below —
+        actually attempt to combine them the same way each time, and watch what happens.
       </p>
       <div className="worked-example">
         <h3>Same A and B as above, split across 2 workers</h3>
         <SplitCompare a={A} b={B} />
       </div>
       <p>
-        That "talk to each other and add" step — the thing row-splitting forces you to do — is
-        exactly what a real distributed training system calls <strong>AllReduce</strong>. You've
-        already understood the core idea behind it.
+        That "try to combine, discover it's wrong, then add instead" step — the thing
+        row-splitting forces on you — is exactly what a real distributed training system calls{' '}
+        <strong>AllReduce</strong>. You've already understood the core idea behind it.
       </p>
     </ChapterLayout>
   )

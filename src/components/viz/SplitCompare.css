@@ -56,22 +56,17 @@
   color: var(--text-faint);
 }
 
-.split-badge {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 999px;
-  margin-top: 4px;
+.split-note {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
 }
 
-.split-badge.complete {
-  color: #2f9e5f;
-  background: rgba(47, 158, 95, 0.12);
-}
-
-.split-badge.incomplete {
-  color: #c17a1f;
-  background: rgba(193, 122, 31, 0.12);
+.split-attempt-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
 .split-combine {
@@ -104,6 +99,10 @@
 
 .split-reveal.complete {
   color: #2f9e5f;
+}
+
+.split-reveal.wrong {
+  color: #d6564a;
 }
 
 .split-reveal.allreduce {
