@@ -14,13 +14,15 @@ prefer adding a prerequisite/math-primer step over assuming a reader already kno
 
 ## Critical constraint — read this first
 
-**Do not write chapter content (the parallelism explanations) unless explicitly asked.** The
-site owner (Paranidharan) has his own ideas for how each chapter should be taught and wants to
-design/write the interactive explanations himself, in his own understanding, as he learns the
-material. Only build template/scaffolding/tooling — layout, nav, routing, viz component
-primitives, theming — until he asks for actual chapter content. All 9 chapter pages currently
-render only `<p>Content coming soon.</p>` inside the shared `ChapterLayout` — that's
-intentional, not unfinished work to "complete" on your own initiative.
+**Do not write chapter content on your own initiative — only build what's been explicitly
+designed.** Paranidharan is learning this material himself and wants to design/drive the
+teaching approach for each chapter — sometimes by literally pasting a transcript of how he
+worked through a concept (e.g. a Socratic back-and-forth) and asking for it to be turned into an
+interactive page. When that happens, build it — that *is* an explicit ask. What you should not
+do is invent chapter explanations or push a chapter from placeholder to "done" without him having
+driven the content/pedagogy first. `math-prerequisites` (see below) is built this way and is the
+reference example. The other 9 chapters still render only `<p>Content coming soon.</p>` inside
+`ChapterLayout` — leave them alone until he brings the same kind of concrete direction.
 
 ## Stack & commands
 
@@ -54,6 +56,24 @@ intentional, not unfinished work to "complete" on your own initiative.
   than inventing a new visual language per chapter.
 - `src/pages/Playground.tsx` (route `/playground`, linked at the bottom of the sidebar) — a
   standalone page for previewing/iterating on viz primitives outside of any real chapter.
+- `src/chapters/MathPrerequisites/index.tsx` — the first real (non-placeholder) chapter, and the
+  template for how content chapters should be built: prose + inline interactive components, not
+  prose alone. Built from four new reusable primitives in `src/components/viz/`:
+  - `Flashcard.tsx` — type-an-answer-or-reveal quiz card (used for every arithmetic step)
+  - `DotProductWalkthrough.tsx` — sequential flashcards for each pairwise product, then a sum
+    flashcard, then a reveal
+  - `MatMulExplorer.tsx` — clickable A/B/C grid (classic schoolbook layout: B above, A to the
+    left, C in the corner); clicking a C cell launches a `DotProductWalkthrough` for that row/
+    column pair and fills the cell in once solved
+  - `SplitCompare.tsx` + `MatrixView.tsx` — toggles between column-splitting B (each worker's
+    piece is already complete, no communication) and splitting the shared inner dimension (each
+    worker gets a partial sum that must be added — the "Combine" button reveals this *is*
+    AllReduce). `matrixUtils.ts` has the plain matrix math (`multiply`, `add`, `sliceCols`,
+    `sliceRows`, `column`) backing all of this — verified by hand against a Node script before
+    committing, since a wrong worked example on a teaching site is worse than no example.
+  Reuse these primitives for later chapters' math/mechanism walkthroughs rather than one-off
+  components — e.g. pipeline-parallel bubble math or ZeRO memory arithmetic could reuse
+  `Flashcard`.
 - `src/index.css` — global theme tokens (CSS custom properties), light/dark via
   `prefers-color-scheme`. Palette is a warm paper/near-black "frontier lab" look — serif
   headlines (`--serif-font`) + sans body + monospace uppercase kickers (`--code-font`).
