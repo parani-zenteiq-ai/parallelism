@@ -1,0 +1,172 @@
+.gpu-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gpu-pair-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.gpu-pair-toggle button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.gpu-pair-toggle button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.gpu-pair-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 24px 8px;
+}
+
+.gpu-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 140px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+}
+
+.gpu-chip-label {
+  font-family: var(--code-font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.gpu-core-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 16px);
+  grid-template-rows: repeat(3, 16px);
+  gap: 4px;
+}
+
+.gpu-core-cell {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--border);
+  animation: gpu-core-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes gpu-core-pulse {
+  0%,
+  100% {
+    background: var(--border);
+  }
+  40% {
+    background: var(--accent);
+  }
+}
+
+.gpu-pair-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  max-width: 180px;
+}
+
+.gpu-link {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+}
+
+.gpu-pulse {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px 1px var(--accent-soft);
+  transform: translate(-50%, -50%);
+  animation: gpu-pulse-move 2.2s linear infinite;
+}
+
+.gpu-link.left .gpu-pulse {
+  animation-name: gpu-pulse-move-right;
+}
+
+.gpu-link.right .gpu-pulse {
+  animation-name: gpu-pulse-move-left;
+}
+
+@keyframes gpu-pulse-move-right {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes gpu-pulse-move-left {
+  from {
+    left: 100%;
+  }
+  to {
+    left: 0%;
+  }
+}
+
+.gpu-combine {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.gpu-combine.row {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+  animation: gpu-combine-flash 2.2s ease-in-out infinite;
+}
+
+@keyframes gpu-combine-flash {
+  0%,
+  85%,
+  100% {
+    box-shadow: none;
+  }
+  92% {
+    box-shadow: 0 0 0 6px var(--accent-soft);
+  }
+}
+
+.gpu-pair-caption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  text-align: center;
+}

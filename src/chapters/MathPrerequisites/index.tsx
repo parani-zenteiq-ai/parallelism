@@ -5,6 +5,7 @@ import { MatMulExplorer } from '../../components/viz/MatMulExplorer'
 import { SplitCompare } from '../../components/viz/SplitCompare'
 import { ShapeExercise } from '../../components/viz/ShapeExercise'
 import { PredictReveal } from '../../components/viz/PredictReveal'
+import { GpuPairDiagram } from '../../components/viz/GpuPairDiagram'
 
 const A = [
   [1, 2, 1, 2],
@@ -217,6 +218,24 @@ export function MathPrerequisites() {
             </>
           }
         />
+      </div>
+
+      <h2>What this actually looks like on real hardware</h2>
+      <p>
+        Everything above happened on paper. Here's the same two scenarios, but drawn as two
+        actual GPUs — each one continuously running its own little matmul (that grid of squares
+        lighting up is standing in for a real tensor core doing multiply-adds), connected by the
+        link they have to use to reach each other.
+      </p>
+      <div className="worked-example">
+        <GpuPairDiagram />
+      </div>
+      <div className="note">
+        📸 Keep this picture in your head for every chapter from here on. Almost every
+        parallelism technique in this course is this exact scene — a handful of GPUs, each
+        crunching its own matmul, linked by an arrow like this one that's sometimes just moving
+        data, and sometimes moving data <em>and</em> adding it. When a later chapter says
+        "AllReduce" or "communication," picture this.
       </div>
 
       <p>
