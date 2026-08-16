@@ -1,0 +1,58 @@
+.predict-reveal {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.predict-prompt {
+  font-weight: 600;
+}
+
+.predict-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.predict-opt {
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.predict-opt:disabled {
+  cursor: default;
+}
+
+.predict-opt.correct {
+  border-color: #2f9e5f;
+  background: rgba(47, 158, 95, 0.12);
+  color: #2f9e5f;
+}
+
+.predict-opt.wrong {
+  border-color: #d6564a;
+  background: rgba(214, 86, 74, 0.1);
+  color: #d6564a;
+}
+
+.predict-explanation {
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.predict-correction {
+  font-weight: 700;
+  color: #d6564a;
+  margin-bottom: 4px;
+}

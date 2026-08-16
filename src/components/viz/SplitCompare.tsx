@@ -75,7 +75,9 @@ export function SplitCompare({ a, b }: SplitCompareProps) {
             <div className="split-result">
               <MatrixView matrix={finalColumn} compareTo={c} label="Placed side by side" />
               <div className="split-reveal complete">
-                ✅ That's already the full, correct C — no talking between workers required.
+                ✅ That's already the full, correct C. The workers' results still had to travel
+                to wherever they're being placed together — but no extra arithmetic was needed to
+                combine them.
               </div>
             </div>
           )}
@@ -131,8 +133,10 @@ export function SplitCompare({ a, b }: SplitCompareProps) {
             <div className="split-result">
               <MatrixView matrix={finalRow} compareTo={c} label="Worker 0's result + Worker 1's result" />
               <div className="split-reveal allreduce">
-                🎉 All green — adding the two workers' results gives the real C. That "talk to
-                each other and add" step is exactly what AllReduce does.
+                🎉 All green — adding the two workers' results gives the real C. Both results
+                still had to travel to the same place, same as before — but this time there's a
+                cheap addition on top too. That "move it over, then add it" step is exactly what
+                AllReduce does.
               </div>
             </div>
           )}

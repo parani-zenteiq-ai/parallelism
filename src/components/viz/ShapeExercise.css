@@ -1,0 +1,18 @@
+.shape-exercise {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.shape-exercise-shapes {
+  font-family: var(--code-font);
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.shape-exercise-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
