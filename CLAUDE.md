@@ -61,24 +61,40 @@ reference example. The other 9 chapters still render only `<p>Content coming soo
   than inventing a new visual language per chapter.
 - `src/pages/Playground.tsx` (route `/playground`, linked at the bottom of the sidebar) — a
   standalone page for previewing/iterating on viz primitives outside of any real chapter.
-- `src/chapters/MathPrerequisites/index.tsx` — the first real (non-placeholder) chapter, and the
-  template for how content chapters should be built: prose + inline interactive components, not
-  prose alone. Built from four new reusable primitives in `src/components/viz/`:
+- `math_preq.md` (repo root) — raw source material for the Math Prerequisites chapter: a
+  Socratic tutoring transcript plus pedagogy notes, uploaded by Paranidharan. This is the pattern
+  going forward: he/his co-author drop a raw notes/transcript file, and the chapter gets built
+  from that content (expanded/organized, not invented) rather than from scratch. Expect similar
+  files for later chapters.
+- `src/chapters/MathPrerequisites/index.tsx` — the first real (non-placeholder) chapter, built
+  from `math_preq.md`, and the template for how content chapters should be built: prose + inline
+  interactive components, not prose alone. Reusable primitives in `src/components/viz/`:
   - `Flashcard.tsx` — type-an-answer-or-reveal quiz card (used for every arithmetic step)
   - `DotProductWalkthrough.tsx` — sequential flashcards for each pairwise product, then a sum
     flashcard, then a reveal
   - `MatMulExplorer.tsx` — clickable A/B/C grid (classic schoolbook layout: B above, A to the
     left, C in the corner); clicking a C cell launches a `DotProductWalkthrough` for that row/
     column pair and fills the cell in once solved
+  - `ShapeExercise.tsx` — given two matrix shapes, quizzes m/k/n via `Flashcard` if valid, or a
+    `PredictReveal` valid/invalid check if not — the (m, k, n) shape-rule drill
+  - `PredictReveal.tsx` — generic predict-then-reveal: pick an option, always see the
+    explanation after. Used for every "common misconception" moment (the row-split shape
+    mismatch, the communication-vs-arithmetic cost misconception) — commit to an answer before
+    seeing the correction, don't just read a callout
   - `SplitCompare.tsx` + `MatrixView.tsx` — toggles between column-splitting B (each worker's
-    piece is already complete, no communication) and splitting the shared inner dimension (each
-    worker gets a partial sum that must be added — the "Combine" button reveals this *is*
-    AllReduce). `matrixUtils.ts` has the plain matrix math (`multiply`, `add`, `sliceCols`,
-    `sliceRows`, `column`) backing all of this — verified by hand against a Node script before
-    committing, since a wrong worked example on a teaching site is worse than no example.
+    piece is already complete — placing them together needs zero extra arithmetic, but data
+    still has to move between GPUs either way) and splitting B by rows with A split to match
+    (each worker gets a full-shaped but partial result; the reveal flow makes you *try* placing
+    them side by side first, see it's wrong — all cells mismatch — before adding instead, which
+    is what AllReduce does). Don't say "no communication needed" for column-split anywhere — that
+    was a real mistake caught against `math_preq.md`; communication is required in both schemes,
+    only the arithmetic differs. `matrixUtils.ts` has the plain matrix math (`multiply`, `add`,
+    `sliceCols`, `sliceRows`, `column`) backing all of this — verified by hand against a Node
+    script before committing, since a wrong worked example on a teaching site is worse than no
+    example.
   Reuse these primitives for later chapters' math/mechanism walkthroughs rather than one-off
   components — e.g. pipeline-parallel bubble math or ZeRO memory arithmetic could reuse
-  `Flashcard`.
+  `Flashcard`/`PredictReveal`.
 - `src/index.css` — global theme tokens (CSS custom properties), light/dark via
   `prefers-color-scheme`. Palette is a warm paper/near-black "frontier lab" look — serif
   headlines (`--serif-font`) + sans body + monospace uppercase kickers (`--code-font`).
@@ -96,10 +112,12 @@ outline above and in `registry.ts` as authoritative if that file is gone).
 
 ## Open items / pending from the owner
 
-- **Co-author**: a friend co-authors this site but their name/links haven't been provided yet.
-  `src/components/Authors.tsx` has a placeholder card ("Co-author" / "Bio coming soon.") — fill
-  in once given a name and something to verify it against (don't invent details).
-- **Paranidharan's bio**: may get an update adding specifics about where he spends most of his
-  real-world time (leaning toward the TPU side) — expect a follow-up edit to `Authors.tsx`.
+- Both authors' bios are filled in on the home page (`src/components/Authors.tsx`) — Paranidharan
+  (ZenteiQ.ai, TPU-scale LLM training, ex-IISc/IBM Granite collaboration) and Pinakin Choudary
+  (IISc math & computing B.Tech, ZenteiQ.ai distributed training clusters). No open item here
+  unless he asks for changes.
+- **Memory arithmetic** (weights/gradients/optimizer-state byte math, section 5 of
+  `math_preq.md`) was deliberately deferred out of `math-prerequisites` — it'll likely surface
+  again as its own chapter or folded into ZeRO/FSDP, where memory sharding is the actual point.
 - Deployment (Vercel/Netlify) hasn't been connected yet — build output is untested against a
   host; `npm run build` output alone has been verified.
