@@ -20,14 +20,22 @@ already knows it.
 ## Critical constraint — read this first
 
 **Do not write chapter content on your own initiative — only build what's been explicitly
-designed.** Paranidharan is learning this material himself and wants to design/drive the
-teaching approach for each chapter — sometimes by literally pasting a transcript of how he
-worked through a concept (e.g. a Socratic back-and-forth) and asking for it to be turned into an
-interactive page. When that happens, build it — that *is* an explicit ask. What you should not
-do is invent chapter explanations or push a chapter from placeholder to "done" without him having
-driven the content/pedagogy first. `math-prerequisites` (see below) is built this way and is the
-reference example. The other 9 chapters still render only `<p>Content coming soon.</p>` inside
-`ChapterLayout` — leave them alone until he brings the same kind of concrete direction.
+designed.** Two valid forms of "explicit ask" have happened so far, both fine to act on:
+1. He pastes a raw notes/transcript file (e.g. `math_preq.md`) and asks for it to become a page
+   — build from that file's content, don't invent beyond it.
+2. He directly says he has no notes and asks you to write and design the content yourself (this
+   happened for `collectives`, 2026-08-19: "no i don't have any content... please you take care
+   of it... make sure we covered all the maths and pre requisites... do not miss anything") — in
+   this case, do your own research/design, but hold the same bar: verify every fact (the
+   collective-op semantics, the arithmetic), reuse established primitives and pedagogy patterns
+   (predict-then-reveal, plain language, discovery-over-pre-labeling — see memory:
+   feedback-pedagogy-style), and don't skip filling real gaps (e.g. division-with-remainder was
+   a genuinely missing prerequisite for rank arithmetic, added proactively).
+What's still off-limits: inventing content nobody asked for, or pushing a chapter from
+placeholder to "done" without either of the two triggers above. `math-prerequisites` and
+`collectives` are built and are the reference examples. The remaining 8 chapters still render
+only `<p>Content coming soon.</p>` inside `ChapterLayout` — leave them alone until one of the two
+triggers happens for them.
 
 ## Stack & commands
 
@@ -95,6 +103,21 @@ reference example. The other 9 chapters still render only `<p>Content coming soo
   Reuse these primitives for later chapters' math/mechanism walkthroughs rather than one-off
   components — e.g. pipeline-parallel bubble math or ZeRO memory arithmetic could reuse
   `Flashcard`/`PredictReveal`.
+- `src/chapters/Collectives/index.tsx` (slug `collectives`, chapter 2, "Ranks, World Size &
+  AllReduce") — authored directly from a live request, no source file (see constraint above).
+  Covers: division-with-remainder (a math prerequisite that was actually missing — needed for
+  rank arithmetic), rank/local-rank/global-rank/world-size vocab with forward+reverse arithmetic
+  drills, and the full collective-op family via one new primitive:
+  - `CollectiveDiagram.tsx` — a mode-driven (`broadcast`/`scatter`/`gather`/`allgather`/`reduce`/
+    `allreduce`/`reducescatter`), click-to-run (not ambient-looping — deliberately different from
+    `FlowRing`/`GpuPairDiagram`, because this is teaching a discrete before/after operation, not
+    an ambient "always computing" scene) diagram: 4 devices around a hub, pulses travel in/out
+    per mode, device labels update from their "before" to "after" state once the animation
+    finishes, replayable via Reset. `reducescatter` is intentionally shallow here (conceptual
+    only, no worked numbers) — the real numeric treatment is deferred to the ZeRO/FSDP chapter
+    where it's actually load-bearing; say so explicitly in prose rather than silently skipping it.
+  Every hardcoded number in this chapter (rank arithmetic, the reduce/allreduce sum) was verified
+  against a plain Node script before committing, same discipline as `math-prerequisites`.
 - `src/index.css` — global theme tokens (CSS custom properties), light/dark via
   `prefers-color-scheme`. Palette is a warm paper/near-black "frontier lab" look — serif
   headlines (`--serif-font`) + sans body + monospace uppercase kickers (`--code-font`).
@@ -107,9 +130,9 @@ Tensor Parallelism → Pipeline Parallelism → Sequence/Context Parallelism →
 (MoE) → Putting It Together. Deliberately reordered so the rank/local-rank/world-size vocabulary
 and a formalized AllReduce come right after Math Prerequisites, *before* the motivational "Why
 Parallelism" chapter — Paranidharan wants the full vocabulary and mental model locked in first,
-then the payoff/motivation chapter after. `collectives` is still a placeholder — its title/
-summary were updated to reflect this new plan, but no content has been authored yet; wait for a
-notes file the same way `math_preq.md` seeded `math-prerequisites`. Math Prerequisites
+then the payoff/motivation chapter after. `collectives` is now authored (see Structure section
+above) — chapter 3, `why-parallelism`, is next and is still a placeholder awaiting direction.
+Math Prerequisites
 (arithmetic, dot products, matrix multiplication, plus a two-GPU hardware visualization) is
 chapter 1 because the audience is school-level with no assumed math/ML background — every later
 chapter should assume only what's taught there, not outside knowledge. Full plan with
