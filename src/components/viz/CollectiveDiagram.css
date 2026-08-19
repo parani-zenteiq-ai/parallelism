@@ -1,0 +1,119 @@
+.collective-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.collective-canvas {
+  position: relative;
+}
+
+.collective-hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 2;
+}
+
+.collective-track {
+  position: absolute;
+  height: 2px;
+  background: var(--border);
+  transform-origin: left center;
+}
+
+.collective-pulse {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px 1px var(--accent-soft);
+  transform: translate(-50%, -50%);
+}
+
+.collective-pulse.outbound {
+  animation: collective-move-out 0.6s ease-in-out forwards;
+}
+
+.collective-pulse.inbound {
+  animation: collective-move-in 0.6s ease-in-out forwards;
+}
+
+@keyframes collective-move-out {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes collective-move-in {
+  from {
+    left: 100%;
+  }
+  to {
+    left: 0%;
+  }
+}
+
+.collective-label {
+  position: absolute;
+  transform: translateX(-50%);
+  width: 120px;
+  text-align: center;
+  font-family: var(--code-font);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.collective-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.collective-controls button {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.collective-controls button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.collective-controls .collective-reset {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.collective-caption {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  text-align: center;
+  max-width: 480px;
+}
