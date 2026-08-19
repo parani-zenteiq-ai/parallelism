@@ -13,16 +13,16 @@ export const chapters: ChapterMeta[] = [
     summary: 'The small bit of math you need before anything else: arithmetic, dot products, and matrix multiplication.',
   },
   {
-    slug: 'why-parallelism',
+    slug: 'collectives',
     order: 2,
-    title: 'Why Parallelism',
-    summary: 'Model size vs. single-GPU memory and compute limits.',
+    title: 'Ranks, World Size & AllReduce',
+    summary: 'The vocabulary distributed training runs on (rank, local rank, world size) and a fully formalized AllReduce.',
   },
   {
-    slug: 'collectives',
+    slug: 'why-parallelism',
     order: 3,
-    title: 'Hardware & Collectives Primer',
-    summary: 'GPU memory hierarchy, interconnects, and the collective ops everything else is built from.',
+    title: 'Why Parallelism',
+    summary: 'Model size vs. single-GPU memory and compute limits.',
   },
   {
     slug: 'data-parallel',

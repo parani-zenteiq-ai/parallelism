@@ -101,14 +101,21 @@ reference example. The other 9 chapters still render only `<p>Content coming soo
 
 ## Content outline (for when chapter authoring resumes)
 
-Teaching order, defined in `registry.ts`: Math Prerequisites → Why Parallelism → Hardware &
-Collectives Primer → Data Parallelism → ZeRO/FSDP → Tensor Parallelism → Pipeline Parallelism →
-Sequence/Context Parallelism → Expert Parallelism (MoE) → Putting It Together. Math
-Prerequisites (arithmetic, dot products, matrix multiplication) was added as chapter 1 because
-the audience is school-level with no assumed math/ML background — every later chapter should
-assume only what's taught there, not outside knowledge. Full plan with per-chapter notes is in
-`~/.claude/plans/zazzy-dreaming-ripple.md` (may not exist in a fresh environment — treat the
-outline above and in `registry.ts` as authoritative if that file is gone).
+Teaching order, defined in `registry.ts` (reordered 2026-08-19): Math Prerequisites → **Ranks,
+World Size & AllReduce** (slug `collectives`) → Why Parallelism → Data Parallelism → ZeRO/FSDP →
+Tensor Parallelism → Pipeline Parallelism → Sequence/Context Parallelism → Expert Parallelism
+(MoE) → Putting It Together. Deliberately reordered so the rank/local-rank/world-size vocabulary
+and a formalized AllReduce come right after Math Prerequisites, *before* the motivational "Why
+Parallelism" chapter — Paranidharan wants the full vocabulary and mental model locked in first,
+then the payoff/motivation chapter after. `collectives` is still a placeholder — its title/
+summary were updated to reflect this new plan, but no content has been authored yet; wait for a
+notes file the same way `math_preq.md` seeded `math-prerequisites`. Math Prerequisites
+(arithmetic, dot products, matrix multiplication, plus a two-GPU hardware visualization) is
+chapter 1 because the audience is school-level with no assumed math/ML background — every later
+chapter should assume only what's taught there, not outside knowledge. Full plan with
+per-chapter notes is in `~/.claude/plans/zazzy-dreaming-ripple.md` (may not exist in a fresh
+environment — treat the outline above and in `registry.ts` as authoritative if that file is
+gone).
 
 ## Open items / pending from the owner
 
