@@ -3,6 +3,7 @@ import { Flashcard } from '../../components/viz/Flashcard'
 import { PredictReveal } from '../../components/viz/PredictReveal'
 import { CollectiveDiagram } from '../../components/viz/CollectiveDiagram'
 import { RingAllReduce } from '../../components/viz/RingAllReduce'
+import { ZoomNarrative } from '../../components/viz/ZoomNarrative'
 
 const RING_VECTORS = [
   [1, 2, 3, 4],
@@ -285,6 +286,17 @@ export function Collectives() {
             </>
           }
         />
+      </div>
+
+      <h2>Putting it all together: from one neuron to the network of GPUs</h2>
+      <p>
+        Everything in this chapter has been about one connection, one weight, at a time. Here's
+        the whole picture, zoomed through three levels — the network you're training, the GPU
+        computing one piece of it, and the ring of GPUs talking to each other to keep every copy
+        in sync.
+      </p>
+      <div className="worked-example">
+        <ZoomNarrative />
       </div>
 
       <p>
