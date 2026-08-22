@@ -82,7 +82,7 @@ function buildConfig(mode: CollectiveMode): ModeConfig {
         outbound: true,
         initial: VALUES.map(String),
         final: Array(4).fill(String(SUM)),
-        caption: `Same as Reduce, but the sum (${SUM}) is sent back to everyone — now every rank holds the identical total. This is the same AllReduce from the two-GPU picture last chapter, just with more GPUs.`,
+        caption: `Everyone sends in, GPU 0 sums them, GPU 0 sends the total (${SUM}) back out to everyone.`,
       }
     case 'reducescatter':
       return {

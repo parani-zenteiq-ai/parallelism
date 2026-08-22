@@ -7,13 +7,13 @@ interface RingAllReduceProps {
   size?: number
 }
 
-export function RingAllReduce({ vectors, size = 340 }: RingAllReduceProps) {
+export function RingAllReduce({ vectors, size = 380 }: RingAllReduceProps) {
   const trace = useMemo(() => simulateRingAllReduce(vectors), [vectors])
   const [pointer, setPointer] = useState(-1)
 
   const n = trace.n
   const center = size / 2
-  const radius = size * 0.34
+  const radius = size * 0.36
 
   const positions = useMemo(() => {
     return Array.from({ length: n }, (_, i) => {

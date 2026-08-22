@@ -1,0 +1,137 @@
+.rs-diagram {
+  display: flex;
+  flex-direction: column;
+}
+
+.rs-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.rs-gpus {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rs-gpu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.rs-gpu-label {
+  font-family: var(--code-font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.rs-squares {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rs-square {
+  width: 32px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s, background 0.3s;
+}
+
+.rs-square-sigma {
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.rs-run {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.rs-caption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 480px;
+  margin: 0;
+}
+
+.rs-flashcards {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rs-matrix-cols {
+  display: flex;
+  gap: 6px;
+}
+
+.rs-col-btn {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.rs-col-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.rs-matrix {
+  display: grid;
+  gap: 4px;
+}
+
+.rs-mcell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--code-font);
+  font-size: 0.88rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.rs-mcell.highlight {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.rs-equation {
+  font-family: var(--code-font);
+  font-size: 0.92rem;
+  color: var(--text);
+  text-align: center;
+}

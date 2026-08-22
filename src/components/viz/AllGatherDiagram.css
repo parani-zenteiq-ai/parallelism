@@ -1,0 +1,108 @@
+.ag-diagram {
+  display: flex;
+  flex-direction: column;
+}
+
+.ag-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ag-gpus {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ag-gpu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ag-gpu-label {
+  font-family: var(--code-font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.ag-squares {
+  display: flex;
+  gap: 4px;
+}
+
+.ag-square {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.ag-number-box {
+  min-width: 40px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--code-font);
+  font-size: 0.82rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ag-run {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.ag-caption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 480px;
+  margin: 0;
+}
+
+.ag-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ag-matrix-row {
+  display: flex;
+  gap: 3px;
+}
+
+.ag-mcell {
+  width: 28px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--code-font);
+  font-size: 0.76rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-faint);
+}
+
+.ag-mcell.own {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}

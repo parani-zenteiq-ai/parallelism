@@ -68,6 +68,11 @@
   font-size: 0.95rem;
 }
 
+.chapter-body .note.warn {
+  border-left-color: #c98a2e;
+  background: rgba(201, 138, 46, 0.08);
+}
+
 .chapter-body .worked-example {
   background: var(--surface);
   border: 1px solid var(--border);
