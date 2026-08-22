@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { DiagramTabs } from './DiagramTabs'
+import { CollectiveDiagram } from './CollectiveDiagram'
+import { RingAllReduce } from './RingAllReduce'
 import './AllGatherDiagram.css'
 
 const COLORS = ['#e0645a', '#4f8ff0', '#3fae6a', '#c98a2e']
@@ -11,14 +13,32 @@ const ROWS = [
   [7, 8],
 ]
 
-export function AllGatherDiagram() {
+interface AllGatherDiagramProps {
+  ringVectors?: number[][]
+}
+
+export function AllGatherDiagram({ ringVectors }: AllGatherDiagramProps) {
   const [tab, setTab] = useState(0)
   return (
     <div className="ag-diagram">
-      <DiagramTabs tabs={['Pieces', 'Numbers', 'Matrix']} active={tab} onChange={setTab} />
+      <DiagramTabs tabs={['Pieces', 'Numbers', 'Matrix', 'Signals', 'Ring']} active={tab} onChange={setTab} />
       {tab === 0 && <PiecesTab />}
       {tab === 1 && <NumbersTab />}
       {tab === 2 && <MatrixTab />}
+      {tab === 3 && (
+        <div className="ag-view">
+          <CollectiveDiagram mode="allgather" />
+        </div>
+      )}
+      {tab === 4 && ringVectors && (
+        <div className="ag-view">
+          <RingAllReduce vectors={ringVectors} />
+          <p className="ag-caption">
+            The last 3 steps here (all-gather phase) are exactly this operation, GPU by GPU —
+            picking up where reduce-scatter left off.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

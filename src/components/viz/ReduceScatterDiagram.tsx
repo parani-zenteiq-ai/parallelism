@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { DiagramTabs } from './DiagramTabs'
 import { Flashcard } from './Flashcard'
+import { CollectiveDiagram } from './CollectiveDiagram'
+import { RingAllReduce } from './RingAllReduce'
 import './ReduceScatterDiagram.css'
 
 interface ReduceScatterDiagramProps {
@@ -16,10 +18,23 @@ export function ReduceScatterDiagram({ vectors }: ReduceScatterDiagramProps) {
 
   return (
     <div className="rs-diagram">
-      <DiagramTabs tabs={['Pieces', 'Numbers', 'Matrix']} active={tab} onChange={setTab} />
+      <DiagramTabs tabs={['Pieces', 'Numbers', 'Matrix', 'Signals', 'Ring']} active={tab} onChange={setTab} />
       {tab === 0 && <PiecesView n={n} />}
       {tab === 1 && <NumbersView vectors={vectors} sums={sums} />}
       {tab === 2 && <MatrixView2 vectors={vectors} sums={sums} />}
+      {tab === 3 && (
+        <div className="rs-view">
+          <CollectiveDiagram mode="reducescatter" />
+        </div>
+      )}
+      {tab === 4 && (
+        <div className="rs-view">
+          <RingAllReduce vectors={vectors} />
+          <p className="rs-caption">
+            The first 3 steps here (reduce-scatter phase) are exactly this operation, GPU by GPU.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

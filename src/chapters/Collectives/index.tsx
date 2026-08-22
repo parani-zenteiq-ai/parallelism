@@ -126,14 +126,19 @@ export function Collectives() {
       <h3>AllGather</h3>
       <p>Everyone starts with a different piece. Everyone ends up with all the pieces — no arithmetic.</p>
       <div className="worked-example">
-        <AllGatherDiagram />
+        <AllGatherDiagram ringVectors={RING_VECTORS} />
       </div>
 
-      <h3>How this runs across many real GPUs</h3>
-      <p>The obvious way: everyone reports to GPU 0, it sums, it reports back.</p>
+      <h3>AllReduce in action</h3>
+      <p>Chain the two operations above and this is what you get — the whole thing, at once:</p>
       <div className="worked-example">
         <CollectiveDiagram mode="allreduce" />
       </div>
+
+      <h3>How this runs across many real GPUs</h3>
+      <p>
+        That diagram above works — but everyone reporting to GPU 0 has a cost. Count the messages:
+      </p>
       <div className="note" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <Flashcard prompt="4 GPUs — GPU 0 total messages =" answer={6} />
         <Flashcard prompt="4 GPUs — a leaf's total messages =" answer={2} />
@@ -142,7 +147,7 @@ export function Collectives() {
       </div>
       <p>
         3× the work at 4 GPUs, 15× at 16. GPU 0 becomes the bottleneck everyone waits on — this is
-        why it's never used at real scale.
+        why the diagram above is never used at real scale.
       </p>
       <p>
         Real systems arrange GPUs in a <strong>ring</strong> instead — every GPU only ever talks to
@@ -175,6 +180,10 @@ export function Collectives() {
         grows as the cluster grows — that's the whole reason it scales.
       </p>
 
+      <p>
+        You now know what AllReduce is, and how it actually moves across real GPUs. Last check —
+        do you know when it fires, and on what, during an actual training step?
+      </p>
       <h3>When does AllReduce actually fire during training?</h3>
       <div className="note">
         <PredictReveal

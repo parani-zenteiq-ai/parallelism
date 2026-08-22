@@ -64,7 +64,7 @@ function buildConfig(mode: CollectiveMode): ModeConfig {
         initial: [...PIECES],
         final: Array(4).fill(PIECES.join('')),
         caption:
-          'Same as Gather, but the assembled full set is sent back out to everyone — now every rank has the complete picture.',
+          "Everyone's distinct piece flows in and gets assembled, then the full set is sent back out — now every rank has the complete picture.",
       }
     case 'reduce':
       return {
@@ -92,7 +92,7 @@ function buildConfig(mode: CollectiveMode): ModeConfig {
         initial: ['4-part data', '4-part data', '4-part data', '4-part data'],
         final: ['slice 0 of sum', 'slice 1 of sum', 'slice 2 of sum', 'slice 3 of sum'],
         caption:
-          "Everyone's data gets added together like AllReduce — but instead of handing the whole sum to everyone, each rank only receives its own slice of it. The real numbers are just below.",
+          "Everyone's data gets added together — but instead of handing the whole sum to everyone, each rank only receives its own slice of it. See the Numbers/Matrix tabs for the real math.",
       }
   }
 }
