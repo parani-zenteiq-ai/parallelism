@@ -104,35 +104,40 @@ triggers happens for them.
   components — e.g. pipeline-parallel bubble math or ZeRO memory arithmetic could reuse
   `Flashcard`/`PredictReveal`.
 - `src/chapters/Collectives/index.tsx` (slug `collectives`, chapter 2, "Ranks, World Size &
-  AllReduce") — authored directly from a live request, no source file (see constraint above).
-  Went through two rounds: an initial pass (rank vocab + a simplified hub-based mental model of
-  the 7 collective ops), then a correction round (2026-08-23) after Paranidharan pushed back that
-  the hub model wasn't enough depth — he wanted the *real* mechanism, real numbers, and the actual
-  algorithm used in practice, "interview prep" rigor, not just a cartoon. That round added:
-  - `CollectiveDiagram.tsx` — the original mode-driven (`broadcast`/`scatter`/`gather`/
-    `allgather`/`reduce`/`allreduce`/`reducescatter`) click-to-run hub diagram. Still used for the
-    7 atomic ops as the *logical/specification* view (what each op computes) — kept deliberately
-    simple/click-to-run (not ambient-looping like `FlowRing`/`GpuPairDiagram`) since these are
-    discrete before/after operations, not an ambient "always computing" scene.
-  - A "real math" section right after: AllReduce is decomposed into ReduceScatter (real 4×4
-    elementwise-sum exercise via `Flashcard`) then AllGather — not hand-waved as one hub op.
-  - `ringAllReduce.ts` — a pure simulation function of the *actual* ring-allreduce algorithm
-    (reduce-scatter phase then all-gather phase around a ring of neighbors) — this is real
-    executable logic, not hardcoded steps, verified against an independent Node script before any
-    UI was built on top of it. `RingAllReduce.tsx` steps through its trace interactively (Prev/
-    Next, phase + step counter, slot-by-slot GPU state) using the exact same 4×4 example.
-  - Prose covering *why* ring-allreduce scales (cost ~2×(N−1) steps, each moving only 1/N of the
-    data, independent of N — the hub model doesn't have this property) and Hierarchical AllReduce
-    (fast intra-node, slower inter-node, tying back to local rank vs. global rank).
-  - `ZoomNarrative.tsx` — a 3-stage click-through capstone: a tiny neural net diagram (SVG) →
-    zoom into one connection as a GPU tensor-core matmul → zoom out to that GPU's gradient being
-    ring-AllReduced with the others (reuses `RingAllReduce`). Built after explicitly asking
-    Paranidharan to choose between three concept options (staged narrative vs. a live mini
-    training loop vs. a single click-to-zoom diagram) since it was the most open-ended, highest-
-    effort ask — he picked the staged narrative.
-  Every hardcoded number in this chapter (rank arithmetic, the reduce/allreduce sums, the ring
-  trace) was verified against independent Node scripts before committing — this is non-negotiable
-  discipline for this site, re-confirmed by this round: a plausible-looking but wrong or
+  AllReduce") — went through three rounds, each worth knowing about:
+  1. Initial pass: authored directly from a live request with no source file at all (rank/world-
+     size vocab + a simplified hub-based mental model of 7 collective ops).
+  2. Correction round (2026-08-23): Paranidharan pushed back that the hub model wasn't enough
+     depth — real mechanism, real numbers, the actual algorithm used in practice, "interview
+     prep" rigor. Added the real ReduceScatter math, a verified ring-allreduce simulation, and the
+     `ZoomNarrative` capstone (see memory: feedback-depth-calibration).
+  3. Full restructure (same day): he pasted a complete, detailed worksheet **inline in the chat**
+     (not a repo file this time — a third valid form of "explicit ask," alongside a repo file and
+     a from-scratch request) and asked for the page to be rebuilt around it, explicitly separating
+     "Part 1" (rank/world-size vocab, untouched) from a big, prominent "Part 2: ALL REDUCE"
+     section. That worksheet is the current source of truth for this chapter's Part 2 structure —
+     it isn't saved anywhere in the repo, so if it needs re-reading, it only exists in that
+     conversation's history.
+  Current structure: Part 1 = rank/world-size vocab (unchanged since round 1). Part 2 (`.part-
+  divider`/`.part-title` in `ChapterLayout.css`, deliberately large/serif to read as its own
+  section) = naive/tree-root scheme first (message-counting `Flashcard` exercise showing the
+  bottleneck grows with N) → Ring AllReduce (chunking explained, then a `PredictReveal` "trap"
+  where naively forwarding whole running totals — not chunks — provably double-counts, verified
+  via Node script to land on 24 instead of 10) → the real worked example via `RingAllReduce.tsx`
+  (backed by `ringAllReduce.ts`, a pure simulation of the actual algorithm, verified against an
+  independent script — not hardcoded steps) → ReduceScatter and AllGather framed explicitly as
+  *standalone* operations (not just AllReduce's internals), composed via `FlowEquation.tsx`
+  (`Reduce-Scatter + All-Gather = AllReduce`) → a ZeRO-vs-FSDP `PredictReveal` → two more
+  `PredictReveal`s on when/what AllReduce touches during real training (gradients, not weights/
+  activations; per-layer with overlap, not once per step) → the `ZoomNarrative` capstone.
+  `CollectiveDiagram.tsx` is still used, but narrowed to two roles: the naive-scheme illustration
+  (`mode="allreduce"`, values now `[1,2,3,4]`→10 to stay consistent with the trap exercise that
+  follows it) and the standalone AllGather/ReduceScatter illustrations. Broadcast/Scatter/plain-
+  Gather were deliberately removed from this chapter per the worksheet's own scoping note — they
+  belong in a future, separate simpler-collectives pass, not mixed into an AllReduce-focused
+  chapter. Every hardcoded number across all three rounds (rank arithmetic, reduce/allreduce
+  sums, the ring trace, the double-counting trap) was verified against independent Node scripts
+  before committing — non-negotiable discipline for this site: a plausible-looking but wrong or
   oversimplified mechanism on a teaching site is worse than not covering it at all.
 - `src/index.css` — global theme tokens (CSS custom properties), light/dark via
   `prefers-color-scheme`. Palette is a warm paper/near-black "frontier lab" look — serif
