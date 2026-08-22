@@ -105,19 +105,35 @@ triggers happens for them.
   `Flashcard`/`PredictReveal`.
 - `src/chapters/Collectives/index.tsx` (slug `collectives`, chapter 2, "Ranks, World Size &
   AllReduce") — authored directly from a live request, no source file (see constraint above).
-  Covers: division-with-remainder (a math prerequisite that was actually missing — needed for
-  rank arithmetic), rank/local-rank/global-rank/world-size vocab with forward+reverse arithmetic
-  drills, and the full collective-op family via one new primitive:
-  - `CollectiveDiagram.tsx` — a mode-driven (`broadcast`/`scatter`/`gather`/`allgather`/`reduce`/
-    `allreduce`/`reducescatter`), click-to-run (not ambient-looping — deliberately different from
-    `FlowRing`/`GpuPairDiagram`, because this is teaching a discrete before/after operation, not
-    an ambient "always computing" scene) diagram: 4 devices around a hub, pulses travel in/out
-    per mode, device labels update from their "before" to "after" state once the animation
-    finishes, replayable via Reset. `reducescatter` is intentionally shallow here (conceptual
-    only, no worked numbers) — the real numeric treatment is deferred to the ZeRO/FSDP chapter
-    where it's actually load-bearing; say so explicitly in prose rather than silently skipping it.
-  Every hardcoded number in this chapter (rank arithmetic, the reduce/allreduce sum) was verified
-  against a plain Node script before committing, same discipline as `math-prerequisites`.
+  Went through two rounds: an initial pass (rank vocab + a simplified hub-based mental model of
+  the 7 collective ops), then a correction round (2026-08-23) after Paranidharan pushed back that
+  the hub model wasn't enough depth — he wanted the *real* mechanism, real numbers, and the actual
+  algorithm used in practice, "interview prep" rigor, not just a cartoon. That round added:
+  - `CollectiveDiagram.tsx` — the original mode-driven (`broadcast`/`scatter`/`gather`/
+    `allgather`/`reduce`/`allreduce`/`reducescatter`) click-to-run hub diagram. Still used for the
+    7 atomic ops as the *logical/specification* view (what each op computes) — kept deliberately
+    simple/click-to-run (not ambient-looping like `FlowRing`/`GpuPairDiagram`) since these are
+    discrete before/after operations, not an ambient "always computing" scene.
+  - A "real math" section right after: AllReduce is decomposed into ReduceScatter (real 4×4
+    elementwise-sum exercise via `Flashcard`) then AllGather — not hand-waved as one hub op.
+  - `ringAllReduce.ts` — a pure simulation function of the *actual* ring-allreduce algorithm
+    (reduce-scatter phase then all-gather phase around a ring of neighbors) — this is real
+    executable logic, not hardcoded steps, verified against an independent Node script before any
+    UI was built on top of it. `RingAllReduce.tsx` steps through its trace interactively (Prev/
+    Next, phase + step counter, slot-by-slot GPU state) using the exact same 4×4 example.
+  - Prose covering *why* ring-allreduce scales (cost ~2×(N−1) steps, each moving only 1/N of the
+    data, independent of N — the hub model doesn't have this property) and Hierarchical AllReduce
+    (fast intra-node, slower inter-node, tying back to local rank vs. global rank).
+  - `ZoomNarrative.tsx` — a 3-stage click-through capstone: a tiny neural net diagram (SVG) →
+    zoom into one connection as a GPU tensor-core matmul → zoom out to that GPU's gradient being
+    ring-AllReduced with the others (reuses `RingAllReduce`). Built after explicitly asking
+    Paranidharan to choose between three concept options (staged narrative vs. a live mini
+    training loop vs. a single click-to-zoom diagram) since it was the most open-ended, highest-
+    effort ask — he picked the staged narrative.
+  Every hardcoded number in this chapter (rank arithmetic, the reduce/allreduce sums, the ring
+  trace) was verified against independent Node scripts before committing — this is non-negotiable
+  discipline for this site, re-confirmed by this round: a plausible-looking but wrong or
+  oversimplified mechanism on a teaching site is worse than not covering it at all.
 - `src/index.css` — global theme tokens (CSS custom properties), light/dark via
   `prefers-color-scheme`. Palette is a warm paper/near-black "frontier lab" look — serif
   headlines (`--serif-font`) + sans body + monospace uppercase kickers (`--code-font`).
