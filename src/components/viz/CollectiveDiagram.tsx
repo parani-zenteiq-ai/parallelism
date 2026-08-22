@@ -21,7 +21,7 @@ interface ModeConfig {
 }
 
 const PIECES = ['🟦', '🟩', '🟨', '🟥']
-const VALUES = [3, 5, 2, 4]
+const VALUES = [1, 2, 3, 4]
 const SUM = VALUES.reduce((a, b) => a + b, 0)
 
 function buildConfig(mode: CollectiveMode): ModeConfig {

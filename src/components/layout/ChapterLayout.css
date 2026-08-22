@@ -106,6 +106,32 @@
   font-size: 0.88rem;
 }
 
+.chapter-body .part-divider {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid var(--border);
+  text-align: center;
+}
+
+.chapter-body .part-kicker {
+  font-family: var(--code-font);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+
+.chapter-body .part-title {
+  font-family: var(--serif-font);
+  font-weight: 600;
+  font-size: 3rem;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  margin: 0;
+}
+
 .chapter-footer-nav {
   display: flex;
   justify-content: space-between;

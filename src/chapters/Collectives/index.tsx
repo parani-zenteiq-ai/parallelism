@@ -3,13 +3,14 @@ import { Flashcard } from '../../components/viz/Flashcard'
 import { PredictReveal } from '../../components/viz/PredictReveal'
 import { CollectiveDiagram } from '../../components/viz/CollectiveDiagram'
 import { RingAllReduce } from '../../components/viz/RingAllReduce'
+import { FlowEquation } from '../../components/viz/FlowEquation'
 import { ZoomNarrative } from '../../components/viz/ZoomNarrative'
 
 const RING_VECTORS = [
-  [1, 2, 3, 4],
-  [2, 1, 0, 3],
-  [0, 2, 2, 1],
-  [1, 1, 1, 0],
+  [1, 10, 100, 1000],
+  [2, 20, 200, 2000],
+  [3, 30, 300, 3000],
+  [4, 40, 400, 4000],
 ]
 
 export function Collectives() {
@@ -100,60 +101,77 @@ export function Collectives() {
         </div>
       </div>
 
-      <h2>Beyond two GPUs</h2>
+      <div className="part-divider">
+        <div className="part-kicker">Part 2</div>
+        <h2 className="part-title">ALL REDUCE</h2>
+      </div>
       <p>
-        The add-vs-stitch idea from last chapter didn't only work for two GPUs — it works for any
-        number of them. With more GPUs, though, we need names for the exact pattern of "who sends
-        what to whom." These patterns are called <strong>collective operations</strong>, and every
-        distributed training technique in this course is built from a small, fixed set of them.
-        Click "Run" on each one below.
+        The row-split idea from last chapter — two workers, each with a partial sum, forced to
+        add their pieces together — is the seed of everything below. Real training runs use
+        dozens, hundreds, even thousands of GPUs, all needing to combine partial results the same
+        way. This part goes deep on exactly how, for real, not just the shape of the idea.
       </p>
 
-      <h3>Broadcast — one rank's data, copied to everyone</h3>
-      <div className="worked-example">
-        <CollectiveDiagram mode="broadcast" />
-      </div>
-
-      <h3>Scatter — one rank's data, split and handed out differently</h3>
-      <div className="worked-example">
-        <CollectiveDiagram mode="scatter" />
-      </div>
-
-      <h3>Gather — everyone's piece, collected at one rank</h3>
-      <div className="worked-example">
-        <CollectiveDiagram mode="gather" />
-      </div>
-
-      <h3>AllGather — everyone's piece, collected and shared back with everyone</h3>
-      <div className="worked-example">
-        <CollectiveDiagram mode="allgather" />
-      </div>
-
-      <h3>Reduce — everyone's value, added together at one rank</h3>
-      <div className="worked-example">
-        <CollectiveDiagram mode="reduce" />
-      </div>
-
-      <h3>AllReduce — everyone's value, added together and shared with everyone</h3>
+      <h3>Why can't we just pick one GPU to collect everything?</h3>
+      <p>
+        Before the clever solution, let's try the obvious one and see it break. 4 GPUs, each
+        holding one number — everyone sends their value to GPU 0, GPU 0 adds them all up, then
+        sends the total back out to everyone.
+      </p>
       <div className="worked-example">
         <CollectiveDiagram mode="allreduce" />
       </div>
+      <p>Count the messages each GPU actually sends and receives, for this specific naive scheme:</p>
+      <div className="note" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <Flashcard prompt="GPU 0 (the hub) — total messages sent + received =" answer={6} />
+        <Flashcard prompt="GPU 1 (a leaf) — total messages sent + received =" answer={2} />
+      </div>
+      <p>Now the same cluster, but 16 GPUs instead of 4, same naive scheme:</p>
+      <div className="note" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <Flashcard prompt="The hub — total messages sent + received =" answer={30} />
+        <Flashcard prompt="A leaf — total messages sent + received =" answer={2} />
+      </div>
+      <p>
+        At 4 GPUs the hub does 3× the work of a leaf. At 16 GPUs, it's 15×. The leaf's workload
+        never changes — but the hub's grows with every GPU you add, until it's the bottleneck the
+        entire system waits on. This is why the naive "everyone report to GPU 0" scheme is
+        essentially never used once a cluster gets big.
+      </p>
 
-      <h3>ReduceScatter — added together, but each rank only keeps its own slice</h3>
-      <div className="worked-example">
-        <CollectiveDiagram mode="reducescatter" />
+      <h3>Ring AllReduce: the real mechanism</h3>
+      <p>
+        Arrange the GPUs in a circle instead. Every GPU only ever talks to its two neighbors —
+        never a central hub. At every step of the whole algorithm, every GPU sends exactly one
+        message and receives exactly one message. No GPU is ever more loaded than any other,
+        no matter how many GPUs are in the ring.
+      </p>
+      <p>
+        There's one detail that makes this actually work, and it's easy to trip over: GPUs don't
+        pass around their <em>whole running total</em> — they pass around <strong>chunks</strong>.
+        Each GPU's data is split into one chunk per GPU in the ring, and only specific individual
+        chunks travel around at a time. Here's why that matters — predict what happens without it:
+      </p>
+      <div className="note">
+        <PredictReveal
+          prompt="4 GPUs hold 1, 2, 3, 4. Every round, each GPU forwards its current running total to its neighbor, who adds it in — no chunking, just the whole number, round after round. After 3 rounds (matching the real algorithm's step count), does GPU 0 end up holding the correct total, 10?"
+          options={[
+            { label: 'Yes, 10', correct: false },
+            { label: 'No — something else', correct: true },
+          ]}
+          explanation={
+            <>
+              GPU 0 ends up with <strong>24</strong>, not 10. Round by round: [5,3,5,7] → [12,8,8,12]
+              → [24,20,16,20]. Because whole totals get re-added as they circle around, the same
+              original values get folded into the sum more than once. Chunking is exactly what
+              prevents this: instead of forwarding an ever-growing mixture, each GPU only ever
+              forwards one specific, well-defined chunk, so nothing is ever added in twice.
+            </>
+          }
+        />
       </div>
 
-      <h2>AllReduce, for real: it's ReduceScatter then AllGather</h2>
-      <p>
-        Here's the part the diagrams above hide: <strong>AllReduce isn't its own primitive.</strong>{' '}
-        Real systems build it by chaining ReduceScatter and then AllGather together. Why bother?
-        Because sending everything to one hub, summing it there, and fanning it back out — what
-        the diagrams above showed — makes that one hub a bandwidth bottleneck. Splitting it into
-        two phases lets the work spread across every GPU's link instead of choking one of them.
-        Let's do the real math this time, with each GPU holding a 4-number vector instead of a
-        single number.
-      </p>
+      <h3>The real worked example</h3>
+      <p>Each GPU now holds a 4-number vector (one slot per GPU in the ring) instead of one number:</p>
       <table>
         <thead>
           <tr>
@@ -176,113 +194,114 @@ export function Collectives() {
         </tbody>
       </table>
       <p>
-        The elementwise sum, column by column — this is exactly what ReduceScatter computes,
-        it just hands each column's answer to a <em>different</em> GPU instead of computing all
-        four somewhere central:
-      </p>
-      <div className="note" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <Flashcard prompt="slot 0: 1 + 2 + 0 + 1 =" answer={4} />
-        <Flashcard prompt="slot 1: 2 + 1 + 2 + 1 =" answer={6} />
-        <Flashcard prompt="slot 2: 3 + 0 + 2 + 1 =" answer={6} />
-        <Flashcard prompt="slot 3: 4 + 3 + 1 + 0 =" answer={8} />
-      </div>
-      <p>
-        After ReduceScatter, no single GPU has all four sums — each one only owns <em>one</em>{' '}
-        correct, final slot. Then AllGather's whole job is just to spread those four already-computed
-        slots around so every GPU ends up holding all four — that's the "for real" version of the
-        AllReduce diagram above, just done as two cheaper, spread-out phases instead of one
-        bottlenecked one.
-      </p>
-
-      <h2>How this actually happens on the wire: Ring-AllReduce</h2>
-      <p>
-        The hub-and-spoke picture from every diagram above is the easiest way to <em>understand</em>{' '}
-        what these operations compute — but it's not how GPUs are actually wired, and it's not
-        what real training frameworks do. Real clusters arrange GPUs in a <strong>ring</strong>,
-        where each GPU only ever talks to its two immediate neighbors. Step through the exact same
-        four vectors below and watch the real algorithm run — every number here is computed live,
-        not hand-picked.
+        Step through the real algorithm below — every number is computed live from these vectors,
+        not hand-picked. Watch how, after the reduce-scatter phase, each GPU ends up owning exactly
+        one slot that's fully correct (like being handed one finished puzzle piece — nobody has
+        the whole picture yet, but every piece that exists is already complete). Then all-gather
+        just relays those finished pieces around until everyone has all four.
       </p>
       <div className="worked-example">
         <RingAllReduce vectors={RING_VECTORS} />
       </div>
       <p>
-        Notice the step count: with 4 GPUs, it takes 3 reduce-scatter steps plus 3 all-gather
-        steps — always <code>2 × (N − 1)</code> for N GPUs. Each step only ever moves 1/N of the
-        data, no matter how many GPUs are in the ring. That's the entire reason ring-AllReduce
-        scales: adding more GPUs doesn't make any single link carry more data, unlike the hub
-        picture where the hub's link has to carry everyone's data at once.
-      </p>
-      <p>
-        One more layer real clusters add: <strong>Hierarchical AllReduce.</strong> A cluster isn't
-        one big ring — it's nodes (remember local rank vs. global rank?) each holding a handful of
-        GPUs connected by a very fast link (like NVLink), while the links <em>between</em> nodes
-        are much slower. So real systems AllReduce quickly within each node first, then do one
-        slower AllReduce across nodes using just one representative rank per node, then broadcast
-        that final result back down to the other local ranks in each node. Same operations you
-        already know — Broadcast, AllReduce — just applied at two different levels of the cluster.
+        Notice the step count: 3 reduce-scatter steps, then 3 all-gather steps — always{' '}
+        <code>2 × (N − 1)</code> for N GPUs, and each step moves only 1/N of the data. Compare
+        that to the naive scheme, where the hub's workload kept growing with N. Here, no GPU's
+        workload grows at all — that's the entire reason this scales.
       </p>
 
-      <h2>Which one do I need?</h2>
-      <p>Given a situation, can you name the right collective? Predict before revealing.</p>
+      <h3>ReduceScatter and AllGather are their own operations</h3>
+      <p>
+        These two aren't just "the internal steps of AllReduce" — they're independently useful,
+        used on their own (not chained together) elsewhere in distributed training. That's worth
+        sitting with, because it's exactly what unlocks ZeRO/FSDP later.
+      </p>
+      <p>
+        <strong>AllGather, standalone:</strong> everyone starts with a genuinely different piece
+        (not a partial sum — just different data), and ends up with all the pieces, no arithmetic
+        involved at all:
+      </p>
+      <div className="worked-example">
+        <CollectiveDiagram mode="allgather" />
+      </div>
+      <p>
+        <strong>ReduceScatter, standalone:</strong> everyone starts with a full-length vector, and
+        ends up owning just one already-summed slot of the total — same operation as the first
+        phase above, useful entirely on its own whenever you don't need the full sum everywhere,
+        just each rank's own slice of it:
+      </p>
+      <div className="worked-example">
+        <CollectiveDiagram mode="reducescatter" />
+      </div>
+      <p>When you need both halves — everyone gets the full combined result — you chain them:</p>
+      <div className="worked-example">
+        <FlowEquation parts={['Reduce-Scatter', 'All-Gather']} result="AllReduce" />
+      </div>
+
+      <h3>Bridge to ZeRO / FSDP</h3>
       <div className="note">
         <PredictReveal
-          prompt="Every GPU computed its own partial gradient. Every GPU needs the total gradient to update its own weights. Which operation?"
+          prompt="True or false: ZeRO and FSDP are the same thing?"
           options={[
-            { label: 'Reduce', correct: false },
-            { label: 'AllReduce', correct: true },
+            { label: 'True', correct: false },
+            { label: 'False', correct: true },
           ]}
           explanation={
             <>
-              Reduce would only give the total to one rank. Every GPU needs its own copy of the
-              total to update its own weights — that's AllReduce. (This is exactly what data
-              parallelism does with gradients, coming up soon.)
+              ZeRO is the general idea (from the DeepSpeed paper), with three progressively more
+              aggressive stages — ZeRO-1, ZeRO-2, ZeRO-3. FSDP is PyTorch's specific
+              implementation of it, and corresponds specifically to ZeRO-3 (sharding parameters,
+              gradients, <em>and</em> optimizer states — the most aggressive stage). ZeRO-1 and
+              ZeRO-2 are less aggressive relatives, not the same thing as FSDP. Their own chapter
+              covers this properly — this is just enough to recognize the names later.
+            </>
+          }
+        />
+      </div>
+      <p>
+        One line to hold onto until then: plain data parallelism needs the <em>full</em> AllReduce
+        because every GPU permanently keeps a full copy of everything. ZeRO/FSDP deliberately use
+        the two halves <em>separately</em> instead — AllGather to temporarily reconstruct a full
+        tensor when needed, ReduceScatter to keep only one gradient shard afterward — because the
+        entire point of ZeRO/FSDP is that no GPU wants to permanently hold the full thing anymore.
+      </p>
+
+      <h3>When does AllReduce actually fire during training?</h3>
+      <div className="note">
+        <PredictReveal
+          prompt="Plain data parallelism, no sharding. Which of these does AllReduce actually touch: weights, activations, or gradients?"
+          options={[
+            { label: 'Weights', correct: false },
+            { label: 'Activations', correct: false },
+            { label: 'Gradients', correct: true },
+          ]}
+          explanation={
+            <>
+              Weights start identical on every GPU and every GPU applies the same averaged
+              update, so they need no extra synchronization to stay identical. Activations are
+              local intermediate values from each GPU's own slice of data — never meant to be
+              shared. Gradients are the odd one out: each GPU computes them independently from{' '}
+              <em>different</em> data, so they genuinely differ across GPUs and must be combined
+              before the shared weight update — otherwise every GPU would drift onto different
+              weights.
             </>
           }
         />
       </div>
       <div className="note">
         <PredictReveal
-          prompt="Rank 0 has the full training dataset and needs to hand a different slice to each GPU. Which operation?"
+          prompt="How many times does AllReduce fire during one training step?"
           options={[
-            { label: 'Broadcast', correct: false },
-            { label: 'Scatter', correct: true },
+            { label: 'Once, after the whole backward pass finishes', correct: false },
+            { label: 'Once per layer/tensor, as each gradient finishes', correct: true },
           ]}
           explanation={
             <>
-              Broadcast would give everyone an identical full copy. Handing out different slices
-              is Scatter.
-            </>
-          }
-        />
-      </div>
-      <div className="note">
-        <PredictReveal
-          prompt="Each GPU holds a different shard of the model's parameters, and needs the full parameter set temporarily to run a computation. Which operation?"
-          options={[
-            { label: 'Gather', correct: false },
-            { label: 'AllGather', correct: true },
-          ]}
-          explanation={
-            <>
-              Gather would assemble the full set at only one rank. Every GPU needs its own full
-              copy — that's AllGather. (This is how ZeRO/FSDP temporarily reassembles sharded
-              parameters — its own chapter covers this in depth.)
-            </>
-          }
-        />
-      </div>
-      <div className="note">
-        <PredictReveal
-          prompt="You only need the sum of everyone's values at one central logging rank — no one else needs it. Which operation?"
-          options={[
-            { label: 'Reduce', correct: true },
-            { label: 'AllReduce', correct: false },
-          ]}
-          explanation={
-            <>
-              AllReduce would needlessly send the sum to every rank. If only one rank actually
-              needs it, plain Reduce does the same job for less communication.
+              Backward pass computes gradients layer by layer, from the output layer toward the
+              input layer. As soon as one layer's gradient is fully computed, its AllReduce can
+              launch immediately — overlapping with the still-ongoing backward computation of
+              earlier layers. That overlap (communication hidden behind ongoing compute) is a
+              real performance optimization real systems rely on, not just a detail.
             </>
           }
         />
@@ -301,10 +320,11 @@ export function Collectives() {
 
       <p>
         That's the full vocabulary this course runs on: rank, local rank, global rank, world
-        size, and the seven collective operations above. Every chapter from here — data
-        parallelism, ZeRO/FSDP, tensor parallelism, pipeline parallelism, MoE — is really just:
-        which of these operations gets used, on what data, and how often. Keep this chapter, and
-        last chapter's two-GPU picture, in mind as the mental model underneath all of it.
+        size, AllReduce, and its two constituent operations, ReduceScatter and AllGather. Every
+        chapter from here — data parallelism, ZeRO/FSDP, tensor parallelism, pipeline parallelism,
+        MoE — is really just: which of these operations gets used, on what data, and how often.
+        Keep this chapter, and last chapter's two-GPU picture, in mind as the mental model
+        underneath all of it.
       </p>
     </ChapterLayout>
   )

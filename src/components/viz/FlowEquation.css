@@ -1,0 +1,37 @@
+.flow-equation {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flow-equation-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.flow-equation-box {
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+.flow-equation-box.result {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.flow-equation-plus,
+.flow-equation-eq {
+  font-family: var(--code-font);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-faint);
+}
