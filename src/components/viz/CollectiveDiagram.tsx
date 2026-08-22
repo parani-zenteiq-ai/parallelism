@@ -92,7 +92,7 @@ function buildConfig(mode: CollectiveMode): ModeConfig {
         initial: ['4-part data', '4-part data', '4-part data', '4-part data'],
         final: ['slice 0 of sum', 'slice 1 of sum', 'slice 2 of sum', 'slice 3 of sum'],
         caption:
-          "Everyone's data gets added together like AllReduce — but instead of handing the whole sum to everyone, each rank only receives its own slice of it. We'll see the exact numbers when this becomes essential, in the ZeRO/FSDP chapter.",
+          "Everyone's data gets added together like AllReduce — but instead of handing the whole sum to everyone, each rank only receives its own slice of it. The real numbers are just below.",
       }
   }
 }

@@ -1,0 +1,132 @@
+.ring-allreduce {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.ring-canvas {
+  position: relative;
+}
+
+.ring-edge {
+  position: absolute;
+  height: 2px;
+  background: var(--border);
+  transform-origin: left center;
+}
+
+.ring-pulse {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px 1px var(--accent-soft);
+  transform: translate(-50%, -50%);
+  animation: ring-pulse-move 0.7s ease-in-out;
+}
+
+@keyframes ring-pulse-move {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.ring-gpu {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.ring-gpu-label {
+  font-family: var(--code-font);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.ring-gpu-slots {
+  display: grid;
+  grid-template-columns: repeat(4, 26px);
+  gap: 3px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+}
+
+.ring-slot {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--code-font);
+  font-size: 0.72rem;
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text-faint);
+}
+
+.ring-slot.partial {
+  color: var(--text-muted);
+}
+
+.ring-slot.sending {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.ring-slot.confirmed {
+  background: #2f9e5f;
+  color: white;
+  font-weight: 700;
+}
+
+.ring-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ring-controls button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.ring-controls button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.ring-step-label {
+  font-family: var(--code-font);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-width: 260px;
+  text-align: center;
+}
+
+.ring-caption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  text-align: center;
+  max-width: 480px;
+}

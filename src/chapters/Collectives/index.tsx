@@ -2,6 +2,14 @@ import { ChapterLayout } from '../../components/layout/ChapterLayout'
 import { Flashcard } from '../../components/viz/Flashcard'
 import { PredictReveal } from '../../components/viz/PredictReveal'
 import { CollectiveDiagram } from '../../components/viz/CollectiveDiagram'
+import { RingAllReduce } from '../../components/viz/RingAllReduce'
+
+const RING_VECTORS = [
+  [1, 2, 3, 4],
+  [2, 1, 0, 3],
+  [0, 2, 2, 1],
+  [1, 1, 1, 0],
+]
 
 export function Collectives() {
   return (
@@ -134,6 +142,85 @@ export function Collectives() {
       <div className="worked-example">
         <CollectiveDiagram mode="reducescatter" />
       </div>
+
+      <h2>AllReduce, for real: it's ReduceScatter then AllGather</h2>
+      <p>
+        Here's the part the diagrams above hide: <strong>AllReduce isn't its own primitive.</strong>{' '}
+        Real systems build it by chaining ReduceScatter and then AllGather together. Why bother?
+        Because sending everything to one hub, summing it there, and fanning it back out — what
+        the diagrams above showed — makes that one hub a bandwidth bottleneck. Splitting it into
+        two phases lets the work spread across every GPU's link instead of choking one of them.
+        Let's do the real math this time, with each GPU holding a 4-number vector instead of a
+        single number.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>GPU</th>
+            <th>slot 0</th>
+            <th>slot 1</th>
+            <th>slot 2</th>
+            <th>slot 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          {RING_VECTORS.map((row, i) => (
+            <tr key={i}>
+              <td>GPU {i}</td>
+              {row.map((v, j) => (
+                <td key={j}>{v}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p>
+        The elementwise sum, column by column — this is exactly what ReduceScatter computes,
+        it just hands each column's answer to a <em>different</em> GPU instead of computing all
+        four somewhere central:
+      </p>
+      <div className="note" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <Flashcard prompt="slot 0: 1 + 2 + 0 + 1 =" answer={4} />
+        <Flashcard prompt="slot 1: 2 + 1 + 2 + 1 =" answer={6} />
+        <Flashcard prompt="slot 2: 3 + 0 + 2 + 1 =" answer={6} />
+        <Flashcard prompt="slot 3: 4 + 3 + 1 + 0 =" answer={8} />
+      </div>
+      <p>
+        After ReduceScatter, no single GPU has all four sums — each one only owns <em>one</em>{' '}
+        correct, final slot. Then AllGather's whole job is just to spread those four already-computed
+        slots around so every GPU ends up holding all four — that's the "for real" version of the
+        AllReduce diagram above, just done as two cheaper, spread-out phases instead of one
+        bottlenecked one.
+      </p>
+
+      <h2>How this actually happens on the wire: Ring-AllReduce</h2>
+      <p>
+        The hub-and-spoke picture from every diagram above is the easiest way to <em>understand</em>{' '}
+        what these operations compute — but it's not how GPUs are actually wired, and it's not
+        what real training frameworks do. Real clusters arrange GPUs in a <strong>ring</strong>,
+        where each GPU only ever talks to its two immediate neighbors. Step through the exact same
+        four vectors below and watch the real algorithm run — every number here is computed live,
+        not hand-picked.
+      </p>
+      <div className="worked-example">
+        <RingAllReduce vectors={RING_VECTORS} />
+      </div>
+      <p>
+        Notice the step count: with 4 GPUs, it takes 3 reduce-scatter steps plus 3 all-gather
+        steps — always <code>2 × (N − 1)</code> for N GPUs. Each step only ever moves 1/N of the
+        data, no matter how many GPUs are in the ring. That's the entire reason ring-AllReduce
+        scales: adding more GPUs doesn't make any single link carry more data, unlike the hub
+        picture where the hub's link has to carry everyone's data at once.
+      </p>
+      <p>
+        One more layer real clusters add: <strong>Hierarchical AllReduce.</strong> A cluster isn't
+        one big ring — it's nodes (remember local rank vs. global rank?) each holding a handful of
+        GPUs connected by a very fast link (like NVLink), while the links <em>between</em> nodes
+        are much slower. So real systems AllReduce quickly within each node first, then do one
+        slower AllReduce across nodes using just one representative rank per node, then broadcast
+        that final result back down to the other local ranks in each node. Same operations you
+        already know — Broadcast, AllReduce — just applied at two different levels of the cluster.
+      </p>
 
       <h2>Which one do I need?</h2>
       <p>Given a situation, can you name the right collective? Predict before revealing.</p>
