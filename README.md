@@ -1,5 +1,9 @@
 # Parallelism
 
+[![CI](https://github.com/parani-zenteiq-ai/parallelism/actions/workflows/ci.yml/badge.svg)](https://github.com/parani-zenteiq-ai/parallelism/actions/workflows/ci.yml)
+[![Deploy](https://github.com/parani-zenteiq-ai/parallelism/actions/workflows/deploy.yml/badge.svg)](https://github.com/parani-zenteiq-ai/parallelism/actions/workflows/deploy.yml)
+[![Live Site](https://img.shields.io/badge/live%20site-view-6a4cff)](https://parani-zenteiq-ai.github.io/parallelism/)
+
 **Live site: https://parani-zenteiq-ai.github.io/parallelism/**
 
 An interactive, from-scratch teaching site explaining how LLMs get trained across thousands of
