@@ -27,11 +27,12 @@ export function Authors() {
 
         <div className="author-card">
           <div className="author-name">Pinakin Choudary</div>
-          <div className="author-role">Distributed Training, ZenteiQ.ai</div>
+          <div className="author-role">LLM Training, ZenteiQ.ai — large-scale TPU clusters</div>
           <p className="author-bio">
-            Pinakin studied math and computing (B.Tech) at the Indian Institute of Science (IISc)
-            Bangalore. He now works at ZenteiQ.ai on distributed training clusters and training
-            large models across them.
+            Pinakin trains LLMs from scratch on large-scale clusters at ZenteiQ.ai, working with
+            XPK, Kubernetes, MaxText, and TPUs. He studied math and computing (B.Tech) at the
+            Indian Institute of Science (IISc) Bangalore, where his work was also focused on
+            large-scale clusters.
           </p>
         </div>
       </div>
