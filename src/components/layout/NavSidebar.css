@@ -75,3 +75,15 @@
 .nav-playground.active {
   color: var(--accent);
 }
+
+.nav-github {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  text-decoration: none;
+}
+
+.nav-github:hover {
+  color: var(--accent);
+}

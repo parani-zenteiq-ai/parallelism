@@ -27,6 +27,14 @@ export function NavSidebar() {
       >
         Component playground
       </NavLink>
+      <a
+        href="https://github.com/parani-zenteiq-ai/parallelism"
+        target="_blank"
+        rel="noreferrer"
+        className="nav-github"
+      >
+        View source on GitHub ↗
+      </a>
     </nav>
   )
 }
